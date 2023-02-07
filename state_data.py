@@ -4,13 +4,15 @@ def generate_ros_data(state="random", cpu_score=None, io_score=None, memory_scor
     """Generate ros_data based on state"""
     new_text = ""
     metrics_json = {}
+
+    state = state.lower()
+
     if state not in VALID_STATES:
         raise ValueError(
             "Correct values are: random, optimized, Idling, Under pressure, "
             "Undersized, Waiting for data"
         )
 
-    state = state.lower()
 
     if state == "optimized":
         metrics_json["kernel.all.cpu.idle"] = "0.997"

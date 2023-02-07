@@ -1,8 +1,13 @@
 import tarfile, shutil, os
 from state_data import generate_ros_data
+class ArchiveNotExtracted(Exception):
+    pass
 
-FILE_PATH = "./archive/insights-ip-aws/insights-ip-172-31-28-69.ec2.internal-20211118062240/data/insights_commands/"
-FILE_NAME = "pmlogsummary_.var.log.pcp.pmlogger.ros.20211117.index_mem.util.used_mem.physmem_kernel.all.cpu.user_kernel.all.cpu.sys_kernel.all.cpu.nice_kernel.all.cpu.steal_kernel.all.cpu.idle_disk.all.total_mem.util.cached_mem.util.bufmem_mem.util.free_kernel.all.cpu"
+def find_by_name(name, path):
+    for root, _, files in os.walk(path):
+        for i in files:
+            if name in i:
+                return os.path.join(root, i)
 
 def write_state(state):
     
@@ -13,15 +18,17 @@ def write_state(state):
     with tarfile.open('archive.tar.gz', 'r') as archive:
         archive.extractall(numeric_owner=True)
 
+    PATH = find_by_name("pmlogsummary", "archive")
+
     #writing state to the extracted file
-    with open(FILE_PATH+FILE_NAME, 'w+') as pmlogger:
+    with open(PATH, 'w+') as pmlogger:
         state_data = generate_ros_data(state)
         pmlogger.write(state_data)
     
     with tarfile.open('archive.tar.gz', mode='w:gz') as archive:
         archive.add("archive", recursive=True)
 
+    #cleanups
     if os.path.exists("./archive"):
         shutil.rmtree("./archive")
-
-write_state("idling")
+        shutil.rmtree("__pycache__")
