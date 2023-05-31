@@ -1,4 +1,4 @@
-VALID_STATES = {"undersized", "idling", "optimized", "under_pressure", "waiting_for_data"}
+VALID_STATES = {"undersized", "idling", "optimized", "under-pressure", "waiting_for_data"}
 
 def generate_ros_data(state="random", cpu_score=None, io_score=None, memory_score=None):
     """Generate ros_data based on state"""
@@ -9,8 +9,7 @@ def generate_ros_data(state="random", cpu_score=None, io_score=None, memory_scor
 
     if state not in VALID_STATES:
         raise ValueError(
-            "Correct values are: random, optimized, Idling, Under pressure, "
-            "Undersized, Waiting for data"
+            "Correct values are: random, optimized, Idling, Under-pressure, Undersized, Waiting_for_data"
         )
 
 
@@ -32,9 +31,9 @@ def generate_ros_data(state="random", cpu_score=None, io_score=None, memory_scor
         metrics_json['kernel.all.pressure.memory.some.avg ["1 minute"]'] = "0.000"
         metrics_json["mem.util.available"] = "825040.000"
 
-    elif state == "under_pressure":
+    elif state == "under-pressure":
         metrics_json["kernel.all.cpu.idle"] = "1.797"
-        metrics_json['kernel.all.pressure.cpu.some.avg["1 minute"]'] = "21.060"
+        metrics_json['kernel.all.pressure.cpu.some.avg ["1 minute"]'] = "21.060"
         metrics_json['kernel.all.pressure.io.full.avg ["1 minute"]'] = "21.000"
         metrics_json['kernel.all.pressure.io.some.avg ["1 minute"]'] = "210.000"
         metrics_json['kernel.all.pressure.memory.full.avg ["1 minute"]'] = "21.000"
